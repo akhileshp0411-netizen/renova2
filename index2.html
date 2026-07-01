@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Renova Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --black:#111;
+      --orange-1:#ff8c00;
+      --orange-2:#ff6600;
+      --muted:#f4f4f4;
+      --card-radius:14px;
+      --glass: rgba(255,255,255,0.06);
+      --shadow: 0 8px 20px rgba(0,0,0,0.12);
+      --accent:#222;
+    }
+
+    /* Reset & base */
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background:#fff;
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Top nav */
+    nav{
+      background:var(--black);
+      color:var(--orange-1);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+      padding:14px 20px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.18);
+    }
+    nav .nav-btn{
+      color:var(--orange-1);
+      background:transparent;
+      border:none;
+      padding:8px 14px;
+      border-radius:8px;
+      font-weight:700;
+      cursor:pointer;
+      letter-spacing:0.3px;
+    }
+    nav .nav-btn:hover{ background: rgba(255,140,0,0.08); color:#fff; }
+    nav .nav-btn.active{
+      background: linear-gradient(90deg,var(--orange-2),var(--orange-1));
+      color:var(--black);
+      box-shadow: 0 6px 18px rgba(255,140,0,0.12);
+    }
+
+    /* Header */
+    header{
+      text-align:center;
+      padding:28px 18px;
+    }
+    header h1{
+      margin:0;
+      font-size:34px;
+      color:var(--black);
+      letter-spacing:1px;
+    }
+    header p{
+      margin:8px 0 0;
+      color:#666;
+      font-size:15px;
+    }
+
+    /* Layout */
+    .container{
+      max-width:1200px;
+      margin:28px auto;
+      padding:0 18px 80px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 300px 1fr 360px;
+      gap:24px;
+      align-items:start;
+    }
+
+    /* Left column: materials & quick list */
+    .card{
+      background:linear-gradient(180deg,#fff,#fff);
+      border-radius:var(--card-radius);
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+    .materials .title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .materials h3{ margin:0; font-size:18px; color:var(--black); }
+    .materials p{ margin:0; color:#666; font-size:13px; }
+
+    .material-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:14px;
+    }
+    .material-item{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(17,17,17,0.02), rgba(17,17,17,0.01));
+    }
+    .material-icon{
+      width:52px;
+      height:52px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      color:var(--black);
+      background: linear-gradient(135deg,var(--orange-1),var(--orange-2));
+      box-shadow: 0 6px 14px rgba(255,140,0,0.12);
+      font-size:18px;
+    }
+    .material-meta{ font-size:14px; color:#222; }
+    .material-meta small{ display:block; color:#666; font-size:12px; margin-top:4px; }
+
+    /* Center: credits card */
+    .credits-card{
+      background: linear-gradient(180deg, #fff, #fff);
+      border-radius:var(--card-radius);
+      padding:28px;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:center;
+      min-height:320px;
+    }
+    .credits-top{
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .credits-top h3{ margin:0; font-size:18px; color:var(--black); }
+    .credits-top small{ color:#666; font-size:13px; }
+
+    .credit-badge{
+      background: linear-gradient(90deg,var(--orange-2),var(--orange-1));
+      color:var(--black);
+      padding:18px 28px;
+      border-radius:12px;
+      font-weight:800;
+      font-size:28px;
+      box-shadow: 0 10px 30px rgba(255,140,0,0.12);
+      letter-spacing:1px;
+    }
+
+    .credit-info{
+      text-align:center;
+      margin-top:6px;
+      color:#444;
+    }
+    .credit-info .small{ font-size:13px; color:#777; margin-top:6px; }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      margin-top:12px;
+    }
+    .btn{
+      border: none;
+      padding:10px 16px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:14px;
+    }
+    .btn.primary{
+      background:var(--black);
+      color:var(--orange-1);
+      box-shadow: 0 8px 20px rgba(17,17,17,0.08);
+    }
+    .btn.ghost{
+      background:transparent;
+      color:#444;
+      border:1px solid rgba(0,0,0,0.06);
+    }
+
+    /* Right: map & vouchers */
+    .map-card{
+      border-radius:var(--card-radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      background: linear-gradient(135deg,#ffcc80,#ff9933);
+      color:#111;
+    }
+    .map-card h3{ margin:0 0 10px 0; font-size:18px; }
+    .map{
+      height:220px;
+      border-radius:10px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02)),
+        repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0 6px, transparent 6px 12px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+    /* simulated markers */
+    .marker{
+      width:14px;
+      height:14px;
+      background:var(--black);
+      border-radius:50%;
+      position:absolute;
+      box-shadow:0 6px 14px rgba(0,0,0,0.18);
+      transform:translate(-50%,-50%);
+    }
+    .marker::after{
+      content:"";
+      position:absolute;
+      width:6px;height:6px;border-radius:50%;
+      background:var(--orange-1); left:50%; top:50%; transform:translate(-50%,-50%);
+    }
+    .map-legend{ margin-top:10px; font-size:13px; color:#111; }
+
+    .vouchers{
+      margin-top:18px;
+      background: rgba(255,255,255,0.12);
+      padding:12px;
+      border-radius:10px;
+    }
+    .voucher-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:8px 6px;
+      border-bottom:1px dashed rgba(0,0,0,0.06);
+      font-size:14px;
+    }
+    .voucher-item:last-child{ border-bottom:none; }
+
+    /* History section */
+    .history{
+      margin-top:28px;
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+    }
+    .history .text{
+      flex:1;
+      background:#fff;
+      padding:18px;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+    }
+    .history .photos{
+      width:360px;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+    .photo{
+      height:120px;
+      border-radius:10px;
+      background: linear-gradient(135deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#666;
+      font-weight:700;
+      font-size:13px;
+      box-shadow:0 6px 14px rgba(0,0,0,0.06);
+    }
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .grid{ grid-template-columns: 1fr; }
+      .map-card{ order:3; }
+      .history .photos{ width:100%; grid-template-columns:repeat(3,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="nav-btn" href="https://renovahome.netlify.app/">Home</a>
+    <a class="nav-btn active" href="https://renovadashboard.netlify.app/">Dashboard</a>
+    <a class="nav-btn" href="D:\RVM\rvm1.html">RVM</a>
+    <a class="nav-btn" href="D:\RVM\rewards.html">Rewards</a>
+  </nav>
+
+
+  <header>
+    <h1>Renova</h1>
+    <p>Turn Waste into Rewards with Renova — dashboard overview</p>
+  </header>
+
+  <main class="container">
+    <section class="grid">
+      <!-- LEFT: Materials list -->
+      <aside class="card materials">
+        <div class="title">
+          <h3>Accepted Materials</h3>
+          <small>What Renova accepts</small>
+        </div>
+
+        <div class="material-list">
+          <div class="material-item">
+            <div class="material-icon">P</div>
+            <div class="material-meta">
+              <strong>Plastic Bottle</strong>
+              <small>10 credits each • Clean, empty</small>
+            </div>
+          </div>
+
+          <div class="material-item">
+            <div class="material-icon">G</div>
+            <div class="material-meta">
+              <strong>Glass Bottle</strong>
+              <small>20 credits each • Rinse before insert</small>
+            </div>
+          </div>
+
+          <div class="material-item">
+            <div class="material-icon">M</div>
+            <div class="material-meta">
+              <strong>Metal Can</strong>
+              <small>15 credits each • Flattening not required</small>
+            </div>
+          </div>
+
+          <div class="material-item">
+            <div class="material-icon">Pa</div>
+            <div class="material-meta">
+              <strong>Paper / Cardboard</strong>
+              <small>5 credits per bundle</small>
+            </div>
+          </div>
+
+          <div class="material-item">
+            <div class="material-icon">E</div>
+            <div class="material-meta">
+              <strong>E‑Waste</strong>
+              <small>30 credits • Small devices only</small>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER: Credits & quick actions -->
+      <section class="card credits-card">
+        <div class="credits-top">
+          <h3>Your Credit Points</h3>
+          <small id="phoneHint">Account: •••• 3210</small>
+        </div>
+
+        <div class="credit-badge" id="creditValue">0</div>
+
+        <div class="credit-info">
+          <div>Credits earned from Renova machines</div>
+          <div class="small">Reach 500 for vouchers • 1000 for premium cash</div>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" onclick="simulateInsert()">Simulate Insert</button>
+          <button class="btn ghost" onclick="openRewards()">View Rewards</button>
+        </div>
+
+        <!-- quick vouchers preview -->
+        <div style="width:100%; margin-top:18px;">
+          <h4 style="margin:0 0 8px 0; font-size:15px;">Vouchers won</h4>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <div style="background:#fff;padding:8px 10px;border-radius:10px;box-shadow:0 6px 12px rgba(0,0,0,0.06);font-weight:700;color:#333;font-size:13px;" id="voucherPreview">—</div>
+            <div style="background:#fff;padding:8px 10px;border-radius:10px;box-shadow:0 6px 12px rgba(0,0,0,0.06);font-weight:700;color:#333;font-size:13px;" id="voucherPreview2">—</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Map & vouchers -->
+      <aside class="map-card">
+        <h3>Nearby Renova Machines</h3>
+
+        <div class="map" id="map">
+          <!-- simulated markers (positions are percentages) -->
+          <div class="marker" style="left:28%; top:34%" title="Renova - Shivaji Nagar"></div>
+          <div class="marker" style="left:62%; top:48%" title="Renova - Camp"></div>
+          <div class="marker" style="left:45%; top:72%" title="Renova - Kothrud"></div>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:rgba(0,0,0,0.12); font-weight:800; font-size:48px;">MAP</div>
+        </div>
+
+        <div class="map-legend">Showing machines in your city • click a marker for details (prototype)</div>
+
+        <div class="vouchers" style="margin-top:14px;">
+          <strong style="display:block; margin-bottom:8px;">Your Vouchers</strong>
+          <div class="voucher-item">
+            <div>Movie Ticket</div>
+            <div style="color:#111; font-weight:800;" id="v1">Locked</div>
+          </div>
+          <div class="voucher-item">
+            <div>50% Discount Coupon</div>
+            <div style="color:#111; font-weight:800;" id="v2">Locked</div>
+          </div>
+          <div class="voucher-item">
+            <div>Partner Gift</div>
+            <div style="color:#111; font-weight:800;" id="v3">Locked</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- History & photos -->
+    <section class="history container" style="max-width:1200px;">
+      <div class="text">
+        <h3 style="margin-top:0;">Our Story & History</h3>
+        <p style="color:#555; margin-top:8px;">
+          Renova's first reverse vending machine was installed in Pune. Since then we have expanded across multiple public locations,
+          partnering with local businesses and civic bodies to make recycling rewarding and convenient.
+        </p>
+
+        <ul style="color:#444; margin-top:12px;">
+          <li><strong>First installation:</strong> Pune (pilot) — community response: excellent</li>
+          <li><strong>Deployment:</strong> Public parks, malls, transit hubs</li>
+          <li><strong>Partners:</strong> Local retailers, eco NGOs, payment providers</li>
+        </ul>
+      </div>
+
+      <div class="photos">
+        <div class="photo">Machine — Pune</div>
+        <div class="photo">Installation Day</div>
+        <div class="photo">Community Drive</div>
+        <div class="photo">Renova Unit Close-up</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Simple client-side simulation for dashboard interactions
+    let credits = 0;
+    const creditEl = document.getElementById('creditValue');
+    const resultVoucher = document.getElementById('voucherPreview');
+    const resultVoucher2 = document.getElementById('voucherPreview2');
+    const v1 = document.getElementById('v1');
+    const v2 = document.getElementById('v2');
+    const v3 = document.getElementById('v3');
+
+    // Simulate an insert (this would be triggered by the RVM hardware in production)
+    function simulateInsert(){
+      // simulate detection probabilities weighted to common items
+      const pool = [
+        {name:'Plastic Bottle', credits:10},
+        {name:'Plastic Bottle', credits:10},
+        {name:'Glass Bottle', credits:20},
+        {name:'Metal Can', credits:15},
+        {name:'Paper/Cardboard', credits:5},
+        {name:'E‑Waste', credits:30}
+      ];
+      const detected = pool[Math.floor(Math.random()*pool.length)];
+      credits += detected.credits;
+      updateUI(detected);
+    }
+
+    function updateUI(detected){
+      creditEl.innerText = credits;
+      // update voucher previews
+      if(credits >= 500 && credits < 1000){
+        resultVoucher.innerText = 'Voucher Unlocked';
+        v1.innerText = 'Unlocked';
+      } else if(credits >= 1000){
+        resultVoucher.innerText = 'Premium Cash Unlocked';
+        resultVoucher2.innerText = 'Multiple Vouchers';
+        v1.innerText = 'Unlocked';
+        v2.innerText = 'Unlocked';
+        v3.innerText = 'Unlocked';
+      } else {
+        resultVoucher.innerText = '—';
+        resultVoucher2.innerText = '—';
+      }
+
+      // show a small transient toast-like update (non-blocking)
+      showTransient(`${detected.name} detected • +${detected.credits} credits`);
+    }
+
+    function openRewards(){
+      // In a real app this would navigate to the rewards page
+      alert('Open Rewards page (prototype)');
+    }
+
+    // transient message
+    function showTransient(text){
+      const el = document.createElement('div');
+      el.style.position='fixed';
+      el.style.right='20px';
+      el.style.bottom='20px';
+      el.style.background='linear-gradient(90deg,var(--orange-2),var(--orange-1))';
+      el.style.color='#111';
+      el.style.padding='12px 16px';
+      el.style.borderRadius='10px';
+      el.style.boxShadow='0 8px 20px rgba(0,0,0,0.12)';
+      el.style.fontWeight='700';
+      el.innerText = text;
+      document.body.appendChild(el);
+      setTimeout(()=> el.style.opacity='0.0',2200);
+      setTimeout(()=> el.remove(),2600);
+    }
+
+    // initial UI
+    creditEl.innerText = credits;
+  </script>
+</body>
+</html>
